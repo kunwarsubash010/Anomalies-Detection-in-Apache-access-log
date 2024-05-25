@@ -65,5 +65,14 @@ ip_counts = parsed_logs_df.groupBy('ip_address').count().orderBy('count', ascend
 frequent_ips = ip_counts.filter(ip_counts['count'] > 100)
 frequent_ips.show()
 
+#Filtering out the queries with response code 404
+not_found_requests = parsed_logs_df.filter(parsed_logs_df['response_code'] == 404)
+
+#Ordering the timestamp in descending order and showing the latest Top 10 with their endpoints
+latest_404_requests = not_found_requests.orderBy('timestamp', ascending=False).limit(10)
+
+#Showing the top 10 latest 404 requests
+latest_404_requests.select('timestamp', 'endpoint').show(truncate=False)
+
 # Stoping the Spark session
 spark.stop()
